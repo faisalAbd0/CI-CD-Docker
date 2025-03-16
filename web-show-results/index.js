@@ -31,7 +31,9 @@ app.get("/", async (req, res) => {
     // reconnect
     try {
         const stats = await Stats.find();
-        res.status(200).render("main", { stats });
+
+        res.status(200).json({ stats });
+        // res.status(200).render("main", { stats });
     } catch (error) {
         res.status(500).send("Error fetching Stats");
     }
