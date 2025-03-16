@@ -1,0 +1,10 @@
+POST http://localhost:4000/add-student
+Content-Type: application/json
+
+{
+  "name": "Faisal",
+  "grade": 20
+}
+###
+GET http://localhost:4000/
+###
