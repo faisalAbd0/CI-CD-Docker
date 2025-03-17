@@ -3,6 +3,4 @@ logs/
 *.log
 *.tmp
 *.env
-old-docker-compose.yml
-docker-compose.yml
 .git/

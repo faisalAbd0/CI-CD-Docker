@@ -1,0 +1,107 @@
+version: "3.7"
+
+services:
+  mysql_db:
+    container_name: mysql_db_container
+    image: faisal2/my-mysql-image:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: faisal123
+      MYSQL_DATABASE: student_grades
+      MYSQL_USER: faisal
+      MYSQL_PASSWORD: faisal123
+    expose:
+      - 3306
+    volumes:
+      - mysql_db_data:/var/lib/mysql    
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-u",
+          "faisal",
+          "-pfaisal123",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  mongo_db:
+    container_name: mongo_db_container
+    image: mongo:latest
+    restart: always
+    volumes:
+      - mongo_db_data:/data/db
+    expose:
+      - 27017
+
+  web-show-results:
+    container_name: web-show-results
+    image: faisal2/web-show-results
+
+    expose:
+      - 3000
+    environment:
+      - MONGO_DB_URL=mongodb://mongo_db:27017/student_grades
+    depends_on:
+      mongo_db:
+        condition: service_started
+
+  web-enter-data:
+    container_name: web-enter-data
+    image: faisal2/web-enter-data
+  
+    expose:
+      - 8080
+    depends_on:
+      mysql_db:
+        condition: service_healthy
+      mongo_db:
+        condition: service_started
+      analysis:
+        condition: service_started
+      authentication:
+        condition: service_started
+
+  analysis:
+    container_name: analysis
+    image: faisal2/analysis
+    expose:
+      - 5000
+    depends_on:
+      mysql_db:
+        condition: service_healthy
+      mongo_db:
+        condition: service_started
+
+  authentication:
+    container_name: authentication
+    image: faisal2/authentication
+    expose:
+      - 6000
+
+  nginx-proxy:
+    image: faisal2/nginx-proxy
+    container_name: nginx-proxy
+    ports:
+      - 80:80
+    volumes:
+      - ./logs:/var/log/nginx
+    depends_on:
+      - web-enter-data
+      - authentication
+      - analysis
+      - web-show-results
+
+volumes:
+  mongo_db_data: {}
+  mysql_db_data: {}
+
+networks:
+  default:
+    name: student_grades_network
