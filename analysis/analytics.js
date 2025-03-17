@@ -15,11 +15,12 @@ async function mySqlFetch(){
     const maxGradeNum = Number(maxGrade);
     const minGradeNum = Number(minGrade);
     const avgGradeNum = Number(avgGrade);
-    return {maxGradeNum, minGradeNum , avgGradeNum};
+    const studentCountNum = Number(studentCount);
+    return {maxGradeNum, minGradeNum , avgGradeNum, studentCount};
 
 }
 
-async function mongoUpdate(maxGradeNum, minGradeNum , avgGradeNum) {
+async function mongoUpdate(maxGradeNum, minGradeNum , avgGradeNum, studentCount) {
     const mongoUrl = process.env.MONGO_URL || 'mongodb://mongo_db:27017/student_grades';
         mongoConnect(mongoUrl);
     
@@ -45,7 +46,7 @@ export async function syncData() {
         // Connect to MySQL
     
         const data = await mySqlFetch();
-        mongoUpdate(data.maxGradeNum, data.minGradeNum, data.avgGradeNum);
+        mongoUpdate(data.maxGradeNum, data.minGradeNum, data.avgGradeNum, data.studentCount);
         
     } catch (err) {
         console.error("Error syncing data:", err.message);
