@@ -13,14 +13,19 @@ export const mysqlPool = mysql.createPool({
 
 export async function getData() {
     const data = await mysqlPool.query(
-        'SELECT MAX(grade) as "Max", MIN(grade) as "Min", AVG(grade) as "Average", COUNT(name) as "Number of students" FROM student'
+        `SELECT 
+        MAX(grade) as "Max",
+        MIN(grade) as "Min",
+        AVG(grade) as "Average",
+        COUNT(name) as "Number of students"
+        FROM student`
     );
     return data;
 }
 export async function mysqlConnect() {
     await mysqlPool.getConnection();
     console.log("Connected to MySQL ✅");
-    
+
 }
 export async function mysqlDisconnect() {
     await mysqlPool.end();
