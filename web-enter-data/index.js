@@ -37,7 +37,7 @@ app.post("/submit", async (req, res) => {
 
 db.then((pool) => {
     app.listen(PORT, () => {
-        console.log(`Server is running on http://localhost:${PORT}`);
+        console.log(`Server is running 123132 on http://localhost:${PORT}`);
     });
 }).catch((err) => {
     console.error("Failed to start server:", err);

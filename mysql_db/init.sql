@@ -6,4 +6,4 @@ CREATE TABLE IF NOT EXISTS student (
     grade DECIMAL(5,2) NOT NULL
 );
 
--- INSERT INTO student (name, grade) VALUES ('test', 95.50);
+INSERT INTO student (name, grade) VALUES ('test', 95.50);
